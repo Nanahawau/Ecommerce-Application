@@ -30,7 +30,7 @@ pipeline {
          steps {
             // Get some code from a GitHub repository
 
-            git 'https://github.com/<your-username>/simple-app.git'
+            git 'https://github.com/Nanahawau/Ecommerce-Application.git'
 
             // Run Maven on a Unix agent.
 
