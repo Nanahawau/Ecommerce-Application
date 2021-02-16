@@ -6,13 +6,14 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh './mvnw -Dmaven.test.failure.ignore=true clean package'
+                sh './gradlew assemble'
             }
         }
-//         stage('Test') {
-//             steps {
-//                 sh './mvnw test'
-//             }
+        stage('Test') {
+            steps {
+                sh './gradlew test'
+            }
         }
+    }
 }
 
