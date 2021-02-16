@@ -1,64 +1,32 @@
-// pipeline {
-//     agent any
-//     triggers {
-//         pollSCM '* * * * *'
-//     }
-//     stages {
-//         stage('Build') {
-//             steps {
-//                 sh './gradlew assemble'
-//             }
-//         }
-//         stage('Test') {
-//             steps {
-//                 sh './gradlew test'
-//             }
-//         }
-//     }
-// }
-
-
-
 pipeline {
+    agent any
 
-   agent any
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "M3"
+    }
 
-   stages {
+    stages {
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/Nanahawau/Ecommerce-Application.git'
 
-      stage('Build') {
+                // Run Maven on a Unix agent.
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
 
-         steps {
-            // Get some code from a GitHub repository
-
-            git 'https://github.com/Nanahawau/Ecommerce-Application.git'
-
-            // Run Maven on a Unix agent.
-
-            sh "./mvnw -Dmaven.test.failure.ignore=true clean package"
-
-            // To run Maven on a Windows agent, use
-
-            // bat "mvn -Dmaven.test.failure.ignore=true clean package"
-
-         }
-
-         post {
-
-            // If Maven was able to run the tests, even if some of the test
-
-            // failed, record the test results and archive the jar file.
-
-            success {
-               junit '**/target/surefire-reports/TEST-*.xml'
-
-               archiveArtifacts 'target/*.jar'
-
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
             }
 
-         }
-
-      }
-
-   }
-
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                }
+            }
+        }
+    }
 }
