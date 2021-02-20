@@ -36,11 +36,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             User credentials = new ObjectMapper()
                     .readValue(req.getInputStream(), User.class);
 
+            Authentication user = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            credentials.getUsername(),
+                            credentials.getPassword(),
+                            new ArrayList<>()));
+
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             credentials.getUsername(),
                             credentials.getPassword(),
                             new ArrayList<>()));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,4 +65,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(HMAC512(SecurityConstants.SECRET.getBytes()));
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
     }
+
+
 }
